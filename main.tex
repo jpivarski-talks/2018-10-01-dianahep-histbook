@@ -181,6 +181,192 @@ Read it back in ROOT:
 \hfill \includegraphics[width=0.5\linewidth]{root-hist.png}
 \end{frame}
 
+\begin{frame}[fragile]{Bidirectional conversions to and from many libraries}
+\vspace{0.1 cm}
+\normalsize
+Save a Physt plot to a ROOT file:
+
+\small
+\begin{minted}{python}
+>>> import physt
+>>> f = uproot.recreate("tmp.root")
+>>> f["name"] = physt.h1(numpy.random.normal(0, 1, 100000), bins=16,
+...                      range=(-4, 4), name="physt histogram")
+\end{minted}
+
+\normalsize
+Read it back as Physt:
+
+\small
+\begin{minted}{python}
+>>> f["name"].physt().plot()
+\end{minted}
+
+\normalsize
+Read it back as a Numpy contents-and-edges tuple:
+
+\small
+\begin{minted}{python}
+>>> f["name"].numpy()
+\end{minted}
+
+\tiny
+\begin{verbatim}
+(array([   23,   112,   473,  1652,  4370,  9061, 15024, 19213, 19091, 15019,  9128,  4501,  1671,   512,   128,    16], dtype=int32),
+ array([-4. , -3.5, -3. , -2.5, -2. , -1.5, -1. , -0.5,  0. ,  0.5,  1. ,  1.5,  2. ,  2.5,  3. ,  3.5,  4. ]))
+\end{verbatim}
+
+\normalsize
+Read it in ROOT:
+
+\small
+\begin{minted}{python}
+>>> f = ROOT.TFile("tmp.root")
+>>> h = f.Get("name")
+>>> h.Draw()
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Not really ``histograms:'' HEPData archival format (YAML)}
+\small
+\vspace{0.1 cm}
+\begin{minted}{python}
+>>> print(f["name"].hepdata())
+\end{minted}
+
+\tiny
+\vspace{-0.6 cm}
+\begin{columns}[t]
+\column{0.4\linewidth}
+\begin{verbatim}
+independent_variables:
+- header: {name: physt histogram, units: null}
+  values:
+  - {low: -4.0, high: -3.5}
+  - {low: -3.5, high: -3.0}
+  - {low: -3.0, high: -2.5}
+  - {low: -2.5, high: -2.0}
+  - {low: -2.0, high: -1.5}
+  - {low: -1.5, high: -1.0}
+  - {low: -1.0, high: -0.5}
+  - {low: -0.5, high: 0.0}
+  - {low: 0.0, high: 0.5}
+  - {low: 0.5, high: 1.0}
+  - {low: 1.0, high: 1.5}
+  - {low: 1.5, high: 2.0}
+  - {low: 2.0, high: 2.5}
+  - {low: 2.5, high: 3.0}
+  - {low: 3.0, high: 3.5}
+  - {low: 3.5, high: 4.0}
+dependent_variables:
+- header: {name: counts, units: null}
+  qualifiers: []
+  values:
+  - value: 23.0
+    errors:
+    - {symerror: 4.795831523312719, label: stat}
+  - value: 112.0
+    errors:
+    - {symerror: 10.583005244258363, label: stat}
+\end{verbatim}
+\column{0.5\linewidth}
+\begin{verbatim}
+  - value: 473.0
+    errors:
+    - {symerror: 21.748563170931547, label: stat}
+  - value: 1652.0
+    errors:
+    - {symerror: 40.64480286580315, label: stat}
+  - value: 4370.0
+    errors:
+    - {symerror: 66.10597552415364, label: stat}
+  - value: 9061.0
+    errors:
+    - {symerror: 95.1892851112981, label: stat}
+  - value: 15024.0
+    errors:
+    - {symerror: 122.5724275683565, label: stat}
+  - value: 19213.0
+    errors:
+    - {symerror: 138.61096637712328, label: stat}
+  - value: 19091.0
+    errors:
+    - {symerror: 138.17018491700733, label: stat}
+  - value: 15019.0
+    errors:
+    - {symerror: 122.55202976695246, label: stat}
+  - value: 9128.0
+    errors:
+    - {symerror: 95.5405672999695, label: stat}
+  - value: 4501.0
+    errors:
+    - {symerror: 67.08949247087803, label: stat}
+  - value: 1671.0
+    errors:
+    - {symerror: 40.87786687193939, label: stat}
+  - value: 512.0
+    errors:
+    - {symerror: 22.627416997969522, label: stat}
+  - value: 128.0
+    errors:
+    - {symerror: 11.313708498984761, label: stat}
+  - value: 16.0
+    errors:
+    - {symerror: 4.0, label: stat}
+\end{verbatim}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Not really ``histograms:'' Pandas DataFrame}
+\large
+
+\begin{columns}[b]
+\column{0.4\linewidth}
+\small
+\begin{minted}{python}
+>>> f["name"].pandas()
+\end{minted}
+
+\scriptsize
+\begin{verbatim}
+                 count  variance
+physt histogram
+[-inf, -4.0)         5         5
+[-4.0, -3.5)        23        23
+[-3.5, -3.0)       112       112
+[-3.0, -2.5)       473       473
+[-2.5, -2.0)      1652      1652
+[-2.0, -1.5)      4370      4370
+[-1.5, -1.0)      9061      9061
+[-1.0, -0.5)     15024     15024
+[-0.5, 0.0)      19213     19213
+[0.0, 0.5)       19091     19091
+[0.5, 1.0)       15019     15019
+[1.0, 1.5)        9128      9128
+[1.5, 2.0)        4501      4501
+[2.0, 2.5)        1671      1671
+[2.5, 3.0)         512       512
+[3.0, 3.5)         128       128
+[3.5, 4.0)          16        16
+[4.0, inf)           1         1
+\end{verbatim}
+
+\column{0.45\linewidth}
+The index for this DataFrame is an {\tt\normalsize IntervalIndex}.
+
+\vspace{0.5 cm}
+The {\tt\normalsize variance} column is the ``sumw2'' (identical to count when filled without weights).
+
+\vspace{0.5 cm}
+There's room here for profile plots to share the same binning.
+
+\vspace{0.5 cm}
+See the F.A.S.T.\ package for CMS: Ben Krikler and Tai Sakuma.
+
+\vspace{0.5 cm}
+\end{columns}
+\end{frame}
+
 
 
 \end{document}
