@@ -229,7 +229,6 @@ Read it in ROOT:
 
 \begin{frame}[fragile]{Not really ``histograms:'' HEPData archival format (YAML)}
 \small
-\vspace{0.1 cm}
 \begin{minted}{python}
 >>> print(f["name"].hepdata())
 \end{minted}
@@ -367,6 +366,18 @@ See the F.A.S.T.\ package for CMS: Ben Krikler and Tai Sakuma.
 \end{columns}
 \end{frame}
 
+\begin{frame}{We can add more without upsetting uproot}
+\large
+\vspace{0.5 cm}
+The code that understands streamers and how to write a TH1 is in {\bf uproot}.
+
+\vspace{0.5 cm}
+The code that understands how to convert to and from other libraries is in {\bf uproot-methods}. We can make changes to {\bf uproot-methods} independently of (and more rapidly than) {\bf uproot}.
+
+\begin{center}
+\includegraphics[width=0.4\linewidth]{abstraction-layers.pdf}
+\end{center}
+\end{frame}
 
 
 \end{document}
