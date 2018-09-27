@@ -444,6 +444,72 @@ But it was too general. An arbitrary tree of aggregators produces an arbitrary t
 The cartesian grid of axis types and storage types in Boost-Histogram and ROOT~7 histograms (and histbook) is general enough.
 \end{frame}
 
+\begin{frame}[fragile]{histbook}
+\vspace{0.1 cm}
+Make cartesian, n-dimensional histograms that you can assign to plot facets on the fly.
+
+\scriptsize
+\begin{onlyenv}<1>
+\scriptsize
+\begin{minted}{python}
+>>> from histbook import *
+>>> multihist = Hist(bin("mass", 100, 0, 500), cut("q1*q2 < 0"),
+...                  split("mt1", [0.2, 0.5]), split("mt2", [0.2, 0.5]), fill=df)
+>>> multihist.step("mass")
+\end{minted}
+\mbox{ } \hfill \includegraphics[height=6 cm]{pandhist.pdf} \hfill \mbox{ }
+\end{onlyenv}
+\begin{onlyenv}<2>
+\scriptsize
+\begin{minted}{python}
+>>> from histbook import *
+>>> multihist = Hist(bin("mass", 100, 0, 500), cut("q1*q2 < 0"),
+...                  split("mt1", [0.2, 0.5]), split("mt2", [0.2, 0.5]), fill=df)
+>>> multihist.overlay("q1*q2 < 0").step("mass")
+\end{minted}
+\mbox{ } \hfill \includegraphics[height=6 cm]{pandhist_overlay.pdf} \hfill \mbox{ }
+\end{onlyenv}
+\begin{onlyenv}<3>
+\scriptsize
+\begin{minted}{python}
+>>> from histbook import *
+>>> multihist = Hist(bin("mass", 100, 0, 500), cut("q1*q2 < 0"),
+...                  split("mt1", [0.2, 0.5]), split("mt2", [0.2, 0.5]), fill=df)
+>>> multihist.stack("q1*q2 < 0").area("mass")
+\end{minted}
+\mbox{ } \hfill \includegraphics[height=6 cm]{pandhist_stack.pdf} \hfill \mbox{ }
+\end{onlyenv}
+\begin{onlyenv}<4>
+\scriptsize
+\begin{minted}{python}
+>>> from histbook import *
+>>> multihist = Hist(bin("mass", 100, 0, 500), cut("q1*q2 < 0"),
+...                  split("mt1", [0.2, 0.5]), split("mt2", [0.2, 0.5]), fill=df)
+>>> multihist.beside("q1*q2 < 0").step("mass")
+\end{minted}
+\mbox{ } \hfill \includegraphics[height=6 cm]{pandhist_trellis.pdf} \hfill \mbox{ }
+\end{onlyenv}
+\begin{onlyenv}<5>
+\scriptsize
+\begin{minted}{python}
+>>> from histbook import *
+>>> multihist = Hist(bin("mass", 100, 0, 500), cut("q1*q2 < 0"),
+...                  split("mt1", [0.2, 0.5]), split("mt2", [0.2, 0.5]), fill=df)
+>>> multihist.below("mt1").beside("mt2").step("mass")
+\end{minted}
+\mbox{ } \hfill \includegraphics[height=6 cm]{pandhist_double_trellis.pdf} \hfill \mbox{ }
+\end{onlyenv}
+\begin{onlyenv}<6>
+\scriptsize
+\begin{minted}{python}
+>>> from histbook import *
+>>> multihist = Hist(bin("mass", 100, 0, 500), cut("q1*q2 < 0"),
+...                  split("mt1", [0.2, 0.5]), split("mt2", [0.2, 0.5]), fill=df)
+>>> multihist.below("mt1").beside("mt2").overlay("q1*q2 < 0").step("mass")
+\end{minted}
+\mbox{ } \hfill \includegraphics[height=6 cm]{pandhist_double_trellis_overlay.pdf} \hfill \mbox{ }
+\end{onlyenv}
+\end{frame}
 
 
 
