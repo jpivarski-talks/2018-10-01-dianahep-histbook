@@ -379,5 +379,69 @@ The code that understands how to convert to and from other libraries is in {\bf 
 \end{center}
 \end{frame}
 
+\begin{frame}{What about Histogrammar and histbook?}
+\vspace{0.25 cm}
+\begin{center}
+\includegraphics[width=0.55\linewidth]{histogrammar-logo-paths.pdf}
+
+\vspace{1 cm}
+\includegraphics[width=0.45\linewidth]{histbook-logo.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Histogrammar}
+\large
+\vspace{0.5 cm}
+Redesigned histogramming as a combinational library: you put simple pieces together to build n-dimensional histograms and profiles.
+
+\vspace{1 cm}
+
+\begin{columns}[t]
+\column{0.47\linewidth}
+\small
+\textcolor{darkblue}{\normalsize Histograms:}
+\begin{minted}{python}
+Bin(num, low, high, fillRule,
+  Count())
+\end{minted}
+
+\vspace{0.25 cm}
+\textcolor{darkblue}{\normalsize Three-dimensional histograms:}
+\begin{minted}{python}
+Bin(xnum, xlow, xhigh, xfill,
+  Bin(ynum, ylow, yhigh, yfill,
+    Bin(znum, zlow, zhigh, zfill,
+      Count()))
+\end{minted}
+
+\column{0.5\linewidth}
+\textcolor{darkblue}{\normalsize Profile plots:}
+\small
+\begin{minted}{python}
+Bin(xnum, xlow, xhigh, xfill,
+  Deviate(yfill))
+\end{minted}
+
+{\small where {\ttfamily\small Deviate} aggregates a mean and standard deviation.}
+
+\vspace{0.25 cm}
+\textcolor{darkblue}{\normalsize Mix and match binning methods:}
+\small
+\begin{minted}{python}
+SparselyBin(0.01, filleta,
+  Bin(314, -3.14, 3.14, fillphi,
+    Count()))
+\end{minted}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Histogrammar}
+\large
+\vspace{0.5 cm}
+
+
+
+\end{frame}
+
 
 \end{document}
