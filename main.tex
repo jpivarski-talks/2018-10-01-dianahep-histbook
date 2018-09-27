@@ -136,13 +136,13 @@ However, the real problem isn't data analysts using different tools; the problem
 \begin{frame}{There is a standard: ROOT files}
 \large
 \vspace{0.5 cm}
-Even if the point is to work in a non-ROOT way or to avoid ROOT dependencies, we can still share results in the ROOT file format.
+Even if the point of a tool is to work in a non-ROOT way or to avoid ROOT dependencies, we can still share results in the ROOT file format.
 
 \vspace{1 cm}
 \textcolor{darkblue}{Look at industry:}
 \begin{itemize}
-\item dozens of big data SQL engines all run on Parquet files;
-\item dozens of machine learning tools all run on Numpy/HDF5.
+\item dozens of big data SQL engines that all run on Parquet files;
+\item dozens of machine learning tools that all run on Numpy from HDF5 files.
 \end{itemize}
 
 \vspace{0.25 cm}
@@ -151,6 +151,36 @@ The most conservative part of a software ecosystem is its persistence format.
 \vspace{1 cm}
 ROOT files are incredibly well established in HEP. It would take a strong technical argument/corner case to use something else.
 \end{frame}
+
+\begin{frame}[fragile]{Writing histograms with uproot}
+\large
+\vspace{0.5 cm}
+uproot version 3 has write support, but (currently) only for histograms.
+
+\small
+\begin{minted}{python}
+>>> import uproot
+>>> import numpy
+>>> f = uproot.recreate("tmp.root")
+>>> f["name"] = numpy.histogram(numpy.random.normal(0, 1, 100000))
+\end{minted}
+
+\vspace{1 cm}
+\large
+Read it back in ROOT:
+
+\small
+\begin{minted}{python}
+>>> import ROOT
+>>> f = ROOT.TFile("tmp.root")
+>>> h = f.Get("name")
+>>> h.Draw()
+\end{minted}
+
+\vspace{-3.5 cm}
+\hfill \includegraphics[width=0.5\linewidth]{root-hist.png}
+\end{frame}
+
 
 
 \end{document}
