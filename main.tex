@@ -444,7 +444,7 @@ But it was too general. An arbitrary tree of aggregators produces an arbitrary t
 The cartesian grid of axis types and storage types in Boost-Histogram and ROOT~7 histograms (and histbook) is general enough.
 \end{frame}
 
-\begin{frame}[fragile]{histbook}
+\begin{frame}[fragile]{histbook: the ``hist'' part}
 \vspace{0.1 cm}
 Make cartesian, n-dimensional histograms that you can assign to plot facets on the fly.
 
@@ -511,8 +511,41 @@ Make cartesian, n-dimensional histograms that you can assign to plot facets on t
 \end{onlyenv}
 \end{frame}
 
+\begin{frame}{histbook: the ``book'' part}
+\vspace{0.5 cm}
+\textcolor{darkblue}{Problem:} physicists define semantic relationships between a large set (thousands) of histograms three or four times:
+\begin{enumerate}
+\item when they construct the histograms (defining the binning)
+\item when they fill the histograms
+\item when they fit with CMS Conbine or ATLAS HistFactory
+\item when they publish results on HEPData
+\end{enumerate}
+
+\vspace{0.5 cm}
+\textcolor{darkblue}{Solution to 1--2:} use functional programming to put the ``fill rule'' next to the binning: Histogrammar, histbook, and RDataFrame.
+\end{frame}
+
+\begin{frame}[fragile]{histbook: the ``book'' part}
+\vspace{0.5 cm}
+\textcolor{darkblue}{Solution to 2--3--4?:} declare trees of related histograms and communicate this relationship to fitters:
+
+\scriptsize
+\begin{minted}{python}
+everything = ChannelsBook(
+    mass = SamplesBook(["data", "signal", "background"],
+                  SystematicsBook(Hist(bin("x", 5, 0, 5), systematic=[0]),
+                                  Hist(bin("x + epsilon", 5, 0, 5), systematic=[1]),
+                                  Hist(bin("x - epsilon", 5, 0, 5), systematic=[-1]))),
+    truth = SamplesBook(["signal", "background"],
+                        Book(par1=Hist(bin("par1", 5, 0, 5)),
+                             par2=Hist(bin("par2", 5, 0, 5)))))
+\end{minted}
+
+\vspace{0.5 cm}
+A {\tt\small Book} has the same fill semantics as a {\tt\small Hist}
 
 
+\end{frame}
 
 
 \end{document}
