@@ -130,13 +130,13 @@ Experimentation in this area is valuable.
 \end{center}
 
 \vspace{0.5 cm}
-However, the real problem isn't data analysts using different tools; the problem is communicating results between data analysts.
+However, the problem isn't that data analysts are using different tools; the problem is communicating results between them.
 \end{frame}
 
 \begin{frame}{There is a standard: ROOT files}
 \large
 \vspace{0.5 cm}
-Even if the point of a tool is to work in a non-ROOT way or to avoid ROOT dependencies, we can still share results in the ROOT file format.
+Even if the point of a tool is to work in a non-ROOT way or to avoid ROOT dependencies, we can still share results using the ROOT file format.
 
 \vspace{1 cm}
 \textcolor{darkblue}{Look at industry:}
@@ -526,7 +526,7 @@ Make cartesian, n-dimensional histograms that you can assign to plot facets on t
 \end{frame}
 
 \begin{frame}[fragile]{histbook: the ``book'' part}
-\vspace{0.5 cm}
+\vspace{0.25 cm}
 \textcolor{darkblue}{Solution to 2--3--4?:} declare trees of related histograms and communicate this relationship to fitters:
 
 \scriptsize
@@ -546,14 +546,15 @@ everything = ChannelsBook(
 A {\tt\small Book} has a fill method like {\tt\small Hist}, so these collections of histograms can be filled in one pass and retain their internal relationships, to be reused for fitting.
 
 \vspace{0.5 cm}
-This is research: what's the right way to structure histograms for fitting that still makes sense for filling?
+This is research: what's the right way to structure histograms for fitting that still makes sense for filling? Need to work with developers of fitting libraries.
 \end{frame}
 
 \begin{frame}[fragile]{Third idea: Pandas DataFrames should be histograms}
-\vspace{0.1 cm}
+\vspace{-0.25 cm}
 A DataFrame with an {\tt\normalsize IntervalIndex} is a {\it sparse} histogram.
 
 \scriptsize
+\vspace{-0.35 cm}
 \begin{verbatim}
              one                  two                 three
 ----------------     ----------------     -----------------
@@ -564,6 +565,8 @@ A DataFrame with an {\tt\normalsize IntervalIndex} is a {\it sparse} histogram.
 \end{verbatim}
 
 \normalsize
+\vspace{-0.35 cm}
+\begin{uncoverenv}<2->
 Adding and other operations would just ``do the right thing'' if not for frustrating details like imputing NaN when an interval key is missing, rather than zero.
 
 \scriptsize
@@ -573,6 +576,7 @@ Adding and other operations would just ``do the right thing'' if not for frustra
 \end{minted}
 
 \scriptsize
+\vspace{-0.35 cm}
 \begin{verbatim}
    add(one, two)      add(two, three)     add(one, two, three)
 ----------------     ----------------     --------------------
@@ -584,7 +588,24 @@ Adding and other operations would just ``do the right thing'' if not for frustra
                      [7.0, 8.0)  4708     [6.0, 7.0)        41
                                           [7.0, 8.0)      4708
 \end{verbatim}
+
+\vspace{-2 cm}
+\large
+\hfill Wrap it \mbox{as\hspace{0.3 cm}}
+
+\hfill a subclass?
+\end{uncoverenv}
 \end{frame}
 
+\begin{frame}{Conclusions}
+\Large
+\vspace{0.25 cm}
+\begin{itemize}\setlength{\itemsep}{0.25 cm}
+\item The design of data analysis tools like histogramming has an impact on human efficiency. It's worth optimizing (experimentally).
+\item The chaos of different tools can be mitigated by a common persistence format, and ROOT's the leading candidate.
+\item Some of the ideas in Histogrammar and histbook are also in Boost-Histogram, Physt, and ROOT 7. Some aren't. I'd rather contribute ideas than maintain my own library.
+\item Looking forward to finding ways to collaborate, get feedback from users, and iterate.
+\end{itemize}
+\end{frame}
 
 \end{document}
