@@ -136,7 +136,7 @@ However, the problem isn't that data analysts are using different tools; the pro
 \begin{frame}{There is a standard: ROOT files}
 \large
 \vspace{0.5 cm}
-Even if the point of a tool is to work in a non-ROOT way or to avoid ROOT dependencies, we can still share results using the ROOT file format.
+Even if the user wants to work in a non-ROOT way or avoid \mbox{ROOT dependencies,\hspace{-0.5 cm}} we still have to be able to share results using the ROOT file format.
 
 \vspace{1 cm}
 \textcolor{darkblue}{Look at industry:}
@@ -227,7 +227,7 @@ Read it in ROOT:
 \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{Not really ``histograms:'' HEPData archival format (YAML)}
+\begin{frame}[fragile]{Some ``non-histograms:'' HEPData archival format (YAML)}
 \small
 \begin{minted}{python}
 >>> print(f["name"].hepdata())
@@ -316,7 +316,7 @@ dependent_variables:
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Not really ``histograms:'' Pandas DataFrame}
+\begin{frame}[fragile]{Some ``non-histograms:'' Pandas DataFrame}
 \large
 
 \begin{columns}[b]
@@ -366,7 +366,7 @@ See the \href{https://indico.cern.ch/event/587955/contributions/2937579/attachme
 
 \begin{frame}{We can add more without upsetting uproot}
 \large
-\vspace{0.5 cm}
+\vspace{0.35 cm}
 The code that understands streamers and how to write a TH1 is in {\bf uproot}.
 
 \vspace{0.5 cm}
@@ -436,7 +436,7 @@ SparselyBin(0.01, filleta,
 \begin{frame}{Histogrammar}
 \large
 \vspace{0.5 cm}
-But it was too general. An arbitrary tree of aggregators produces an arbitrary tree of aggregated data, which is hard to format as a plot.
+However, it was too general. An arbitrary tree of aggregators produces an arbitrary tree of aggregated data, which is hard to format as a plot.
 
 \vspace{1 cm}
 The cartesian grid of axis types and storage types in Boost-Histogram and ROOT~7 histograms (and histbook) is general enough.
@@ -520,7 +520,7 @@ Make cartesian, n-dimensional histograms that you can assign to plot facets on t
 \end{enumerate}
 
 \vspace{0.5 cm}
-\textcolor{darkblue}{Solution to 1--2:} use functional programming to put the ``fill rule'' next to the binning: Histogrammar, histbook, and RDataFrame.
+\uncover<2->{\textcolor{darkblue}{Solution to 1--2:} use functional programming to put the ``fill rule'' next to the binning: \textcolor{darkorange}{Histogrammar}, \textcolor{darkorange}{histbook}, \textcolor{darkorange}{RDataFrame}, and \textcolor{darkorange}{AlphaTwirl} (F.A.S.T.\ ingestion) all do this.}
 \end{frame}
 
 \begin{frame}[fragile]{histbook: the ``book'' part}
@@ -544,26 +544,26 @@ everything = ChannelsBook(
 A {\tt\small Book} has a fill method like {\tt\small Hist}, so these collections of histograms can be filled in one pass and retain their internal relationships, to be reused for fitting.
 
 \vspace{0.5 cm}
-This is research: what's the right way to structure histograms for fitting that still makes sense for filling? Need to work with developers of fitting libraries.
+\textcolor{darkblue}{This is research:} what's the right way to structure histograms for fitting that still makes sense for filling? Need to work with developers of fitting libraries.
 \end{frame}
 
 \begin{frame}[fragile]{Third idea: Pandas DataFrames should be histograms}
-\vspace{-0.25 cm}
+\vspace{-0.15 cm}
 A DataFrame with an {\tt\normalsize IntervalIndex} is a {\it sparse} histogram.
 
 \scriptsize
 \vspace{-0.35 cm}
 \begin{verbatim}
-             one                  two                 three
-----------------     ----------------     -----------------
-[0.0, 1.0)  4538     [1.0, 2.0)    71     [6.0, 7.0)     41
-[1.0, 2.0)  4513     [2.0, 3.0)  5009     [7.0, 8.0)   4708
-[2.0, 3.0)   483     [3.0, 4.0)  4868
-[3.0, 4.0)     4     [4.0, 5.0)    52
+                  one                  two                 three
+     ----------------     ----------------     -----------------
+     [0.0, 1.0)  4538     [1.0, 2.0)    71     [6.0, 7.0)     41
+     [1.0, 2.0)  4513     [2.0, 3.0)  5009     [7.0, 8.0)   4708
+     [2.0, 3.0)   483     [3.0, 4.0)  4868
+     [3.0, 4.0)     4     [4.0, 5.0)    52
 \end{verbatim}
 
 \normalsize
-\vspace{-0.35 cm}
+\vspace{-0.15 cm}
 \begin{uncoverenv}<2->
 Adding and other operations would just ``do the right thing'' if not for frustrating details like imputing NaN when an interval key is missing, rather than zero.
 
@@ -576,33 +576,35 @@ Adding and other operations would just ``do the right thing'' if not for frustra
 \scriptsize
 \vspace{-0.35 cm}
 \begin{verbatim}
-   add(one, two)      add(two, three)     add(one, two, three)
-----------------     ----------------     --------------------
-[0.0, 1.0)  4538     [1.0, 2.0)    71     [0.0, 1.0)      4538
-[1.0, 2.0)  4584     [2.0, 3.0)  5009     [1.0, 2.0)      4584
-[2.0, 3.0)  5492     [3.0, 4.0)  4868     [2.0, 3.0)      5492
-[3.0, 4.0)  4872     [4.0, 5.0)    52     [3.0, 4.0)      4872
-[4.0, 5.0)    52     [6.0, 7.0)    41     [4.0, 5.0)        52
-                     [7.0, 8.0)  4708     [6.0, 7.0)        41
-                                          [7.0, 8.0)      4708
+        add(one, two)      add(two, three)     add(one, two, three)
+     ----------------     ----------------     --------------------
+     [0.0, 1.0)  4538     [1.0, 2.0)    71     [0.0, 1.0)      4538
+     [1.0, 2.0)  4584     [2.0, 3.0)  5009     [1.0, 2.0)      4584
+     [2.0, 3.0)  5492     [3.0, 4.0)  4868     [2.0, 3.0)      5492
+     [3.0, 4.0)  4872     [4.0, 5.0)    52     [3.0, 4.0)      4872
+     [4.0, 5.0)    52     [6.0, 7.0)    41     [4.0, 5.0)        52
+                          [7.0, 8.0)  4708     [6.0, 7.0)        41
+                                               [7.0, 8.0)      4708
 \end{verbatim}
 
-\vspace{-2 cm}
+\vspace{-3.75 cm}
 \large
 \hfill Wrap it \mbox{as\hspace{0.3 cm}}
 
 \hfill a subclass?
 \end{uncoverenv}
+
+\vspace{1.75 cm}
 \end{frame}
 
 \begin{frame}{Conclusions}
 \Large
 \vspace{0.25 cm}
 \begin{itemize}\setlength{\itemsep}{0.25 cm}
-\item The design of data analysis tools like histogramming has an impact on human efficiency. It's worth optimizing (experimentally).
-\item The chaos of different tools can be mitigated by a common persistence format, and ROOT's the leading candidate.
-\item Some of the ideas in Histogrammar and histbook are also in Boost-Histogram, Physt, and ROOT 7. Some aren't. I'd rather contribute ideas than maintain my own library.
-\item Looking forward to finding ways to collaborate, get feedback from users, and iterate.
+\item The design of data analysis tools like histogramming has an impact on human efficiency. It's worth optimizing (experimentally!).
+\item The chaos of different tools can be mitigated by a common persistence format, and ROOT's the obvious candidate.
+\item Some of the ideas in Histogrammar and histbook are also in Boost-Histogram, Physt, F.A.S.T., and ROOT 7. Some aren't. I'd rather contribute ideas than maintain my own library.
+\item Looking forward to finding ways to collaborate, get feedback from users\ldots\ and iterate!
 \end{itemize}
 \end{frame}
 
